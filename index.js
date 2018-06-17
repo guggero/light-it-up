@@ -1,200 +1,212 @@
-
 "use strict";
 
-function flash(o) {
+function flash(opts) {
+  let options = opts || {};
+  // apply default options
+  let renderTarget = options.element || document.body;
+  let duration = options.duration || 800;
+  let zIndex = `${options.zIndex || 1000}`;
+  let colorFlash = options.colorFlash || 'rgba(255, 255, 255, 1)';
+  let colorBlur = options.colorBlur || 'rgba(192, 192, 255, 1)';
 
-  let e2 = o.element;
-  let w = parseInt(e2.clientWidth,10);
-  let h = parseInt(e2.clientHeight,10);
-  let e = document.createElement('div');
-  e2.insertBefore(e, e2.firstChild);
-  //e.style.height='0px';
-  e.style.zOrder = '1000';
-  //    e2.appendChild(e);
-  zflash(o);
-  //        setInterval(()=>{zflash(o);},1000);
+  let style = addStyles(colorFlash, colorBlur);
+  let w = renderTarget.clientWidth;
+  let h = renderTarget.clientHeight;
+  let id = `lncontainer-${new Date().getTime()}`;
+  let renderContainer = document.createElement('div');
+  renderContainer.className = 'lncontainer';
+  renderContainer.style.zIndex = zIndex;
+  renderContainer.id = id;
+  renderTarget.insertBefore(renderContainer, renderTarget.firstChild);
 
-  function zflash(o) {
-    console.log(`flash ${w}x${h}`);
-    let fl = 0;
+  drawSvgFlash(renderContainer, w, h);
+  startAnimation('lnbox0', duration);
+  startAnimation('lnbox1', duration);
 
-    //    console.log(e);
+  setTimeout(function () {
+    renderTarget.removeChild(renderContainer);
+    document.body.removeChild(style);
+  }, duration);
+}
 
-    let x = w / 2;
-    let y = h / 2;
-    let w2 = w / 2;
-    let h2 = h / 2;
-    let mm2 = Math.max(h2, w2);
-    let mm2b = mm2 * Math.sqrt(2);
-    let dlx;
-    let dly;
-    let coords = '';
-    let svgs = ['', '', ''];
-    let dist = 0;
-    function d() {
-      let b = '';
-      if (dist > 1)
-        b = ' b';
-      if (dist > 2)
-        b = ' c';
-      if (coords) {
-        svgs[2] += `<path  class='ln ln2${b}' d="m ${coords}" fill="none"/>`;
-        svgs[1] += `<path  class='ln ln1${b}' d="m ${coords}" fill="none"/>`;
-        svgs[0] += `<path  class='ln ln0${b}' d="m ${coords}" fill="none"/>`;
-      }
-      coords = '';
+function startAnimation(id, duration) {
+  document.getElementById(id).style.animationDuration = `${duration / 1000}s`;
+  document.getElementById(id).style.animationPlayState = 'running';
+}
+
+function drawSvgFlash(renderContainer, w, h) {
+  let x = w / 2;
+  let y = h / 2;
+  let w2 = w / 2;
+  let h2 = h / 2;
+  let mm2 = Math.max(h2, w2);
+  let mm2b = mm2 * Math.sqrt(2);
+  let dlx;
+  let dly;
+  let coords = '';
+  let svgs = ['', '', ''];
+  let dist = 0;
+  let lagom = mm2 / 20;
+  let px, py;
+  let dir = 0;
+
+  drawPath();
+  newPoint();
+  let s = [];
+  let lx = x;
+  let ly = y;
+  let ll = 0;
+  for (let i = 0; i < 200; i++) {
+    xy(x, y);
+    if (ll === 10) {
+      dist++;
+      s.push([dist, dir, lx, ly, x, y]);
+    }
+    lx = x;
+    ly = y;
+    dir += 0.75 * 2 * Math.PI * (Math.random() - .5);
+    x += Math.sin(dir) * lagom * 0.75 + px;
+    y += Math.cos(dir) * lagom * 0.75 + py;
+    if (ll > 3 && Math.random() < 0.01 && s.length > 0) {
+      drawPath();
       dlx = 0;
       dly = 0;
-    }
-    function xy(x, y) {
-      let dx = Math.floor(x - dlx);
-      let dy = Math.floor(y - dly);
-      coords += ' ' + dx;
-      coords += ' ' + dy;
-      dlx += dx;
-      dly += dy;
-    }
-    d();
-
-    let lagom = mm2 / 20;
-    let px, py;
-    let dir = 0;
-    function newp() {
-      dir = 2 * Math.PI * Math.random();
-      dir = 0.5 * Math.PI * (Math.random() - .5);
-      px = Math.sin(dir) * lagom * .5;
-      py = Math.cos(dir) * lagom * .5;
-      x = Math.sin(dir) * -mm2b + w2;
-      y = Math.cos(dir) * -mm2b + h2;
-      //px=py=0;
-    }
-    newp();
-    let s = [];
-    let lx = x;
-    let ly = y;
-    let ll = 0;
-    for (let i = 0; i < 200; i++) {
+      [dist, dir, lx, ly, x, y] = s[Math.floor(Math.random() * s.length)];
+      xy(lx, ly);
       xy(x, y);
-      //if (Math.random() < 0.01)
-      if (ll == 10) {
-        dist++;
-        s.push([dist, dir, lx, ly, x, y]);
-      }
-      lx = x;
-      ly = y;
-      dir += 0.75 * 2 * Math.PI * (Math.random() - .5);
-      x += Math.sin(dir) * lagom * 0.75 + px;
-      y += Math.cos(dir) * lagom * 0.75 + py;
-      if (ll > 3 && Math.random() < 0.01 && s.length > 0) {
-        d();
-        [dist,dir,lx,ly,x,y] = // s.splice(Math.random() * s.length, 1)[0];
-          s[Math.floor(Math.random() * s.length)];
-        xy(lx, ly);
-        xy(x, y);
-        ll = 0;
-      }
-      ll++;
+      ll = 0;
     }
-    d();
-
-    let svg0 = '';
-
-    svg0 += `<svg class="lnbox lnbox0" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">`;
-
-    svg0 += `
-
-  <defs>
-    <filter id="f1" x="0" y="0">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
-    </filter>
-    <filter id="f2" x="0" y="0">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
-    </filter>
-    <filter id="f3" x="0" y="0">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
-    </filter>
-
-  </defs>
-`;
-
-    svg0 += svgs[0];
-    svg0 += `</svg>`;
-
-    let svg1 = '';
-
-    svg1 += `<svg class="lnbox lnbox1" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">`;
-
-    svg1 += `
-
-  <defs>
-    <filter id="f1" x="0" y="0">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
-    </filter>
-    <filter id="f2" x="0" y="0">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
-    </filter>
-    <filter id="f3" x="0" y="0">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
-    </filter>
-
-  </defs>
-`;
-
-    svg1 += svgs[1];
-    svg1 += `</svg>`;
-
-    //    console.log(svg);
-    e.innerHTML = `${svg1}${svg0}`;
-
+    ll++;
   }
-}
+  drawPath();
+  dlx = 0;
+  dly = 0;
 
+  renderContainer.innerHTML = `
+    <svg class="lnbox lnbox1" id="lnbox1" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="f1" x="0" y="0">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
+        </filter>
+        <filter id="f2" x="0" y="0">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
+        </filter>
+        <filter id="f3" x="0" y="0">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+        </filter>
+      </defs>
+      ${svgs[1]}
+    </svg>
+    <svg class="lnbox lnbox0" id="lnbox0" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="f1" x="0" y="0">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
+        </filter>
+        <filter id="f2" x="0" y="0">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
+        </filter>
+        <filter id="f3" x="0" y="0">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+        </filter>
+      </defs>
+      ${svgs[0]}
+    </svg>`;
 
-window['flash']=flash;
-
-
-function myreload(event)
-{
-  if(event) event.preventDefault();
-  let    e=document.getElementById('postreload');
-  e.submit();
-}
-
-function togglemenu(event)
-{
-  if(event) event.preventDefault();
-  let e=    document.getElementById('mainmenu');
-  e.classList.toggle("selected");
-
-}
-
-function flipvis(event,x)
-{
-  if(event) event.preventDefault();
-  for(let i of x)
-  {
-    let e=document.getElementById(i);
-    if(e)
-    {
-//        console.log(e.style);
-      if(e.style.display=='none')  e.style.display='';
-      else
-        e.style.display='none';
+  function drawPath() {
+    let b = '';
+    if (dist > 1) {
+      b = ' b';
     }
+    if (dist > 2) {
+      b = ' c';
+    }
+    if (coords) {
+      svgs[1] += `<path  class='ln ln1${b}' d="m ${coords}" fill="none"/>`;
+      svgs[0] += `<path  class='ln ln0${b}' d="m ${coords}" fill="none"/>`;
+    }
+    coords = '';
+    dlx = 0;
+    dly = 0;
+  }
+
+  function xy(x, y) {
+    let dx = Math.floor(x - dlx);
+    let dy = Math.floor(y - dly);
+    coords += ' ' + dx;
+    coords += ' ' + dy;
+    dlx += dx;
+    dly += dy;
+  }
+
+  function newPoint() {
+    dir = 2 * Math.PI * Math.random();
+    dir = 0.5 * Math.PI * (Math.random() - .5);
+    px = Math.sin(dir) * lagom * .5;
+    py = Math.cos(dir) * lagom * .5;
+    x = Math.sin(dir) * -mm2b + w2;
+    y = Math.cos(dir) * -mm2b + h2;
   }
 }
 
-function hid()
-{
-  if(!document.body.classList.contains("paid"))
-  {
-    document.body.classList.add('loading');
-    document.body.classList.remove('ready');
+function addStyles(colorFlash, colorBlur) {
+  let sheet = document.createElement('style');
+  sheet.innerHTML = `
+  svg .ln {
+      filter: ' feGaussianBlur in="SourceGraphic" stdDeviation="15" ';
+      fill: '#ff0';
   }
+  
+  svg .ln0 {
+      stroke: ${colorFlash};
+      stroke-width: 2;
+  }
+  
+  svg .ln0.b {
+      stroke-width: 1;
+  }
+  
+  svg .ln0.c {
+      stroke-width: .5;
+  }
+  
+  svg .ln1 {
+      stroke: ${colorBlur};
+      stroke-width: 10;
+  }
+  
+  @keyframes lnanim {
+      0% {
+          opacity: 1;
+          background: rgba(255, 255, 255, .5);
+      }
+      20% {
+          opacity: 1;
+          background: rgba(0, 0, 0, .5);
+      }
+      50% {
+          opacity: 1;
+          background: rgba(255, 255, 255, .5);
+      }
+      100% {
+          opacity: 0;
+          background: rgba(0, 0, 0, 0);
+      }
+  }
+  
+  svg.lnbox {
+      position: absolute;
+      top: 0;
+      left: 0;
+      animation: lnanim 0.5s ease 0s 1 normal both paused;
+  }
+  
+  svg.lnbox1 {
+      filter: blur(13px);
+  }`;
+  document.body.appendChild(sheet);
+  return sheet;
 }
 
-window.addEventListener("beforeunload", hid);
-window.addEventListener("unload", hid);
-window.addEventListener("pagehide",  hid);
-
-
+module.exports = {
+  flash,
+};
