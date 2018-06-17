@@ -1,0 +1,470 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+html {background:#88c;}
+
+
+/**/
+svg .ln {
+    filter:' feGaussianBlur in="SourceGraphic" stdDeviation="15" ';
+    fill: '#ff0';
+}
+
+svg .ln0 {
+    stroke:rgba(255,255,255,1);
+    stroke-width: 2;
+}
+svg .ln0.b {
+    stroke-width: 1;
+}
+svg .ln0.c {
+
+    stroke-width: .5;
+}
+svg .ln1 {
+    stroke:rgba(192,192,255,1);
+    stroke-width:  10;
+}
+svg .ln2 {
+    stroke: rgba(255,128,255,1);
+    stroke-width: 10;
+}
+svg .ln2.b {
+    stroke-width:  5;
+}
+svg .ln2.c {
+    stroke-width:  2.5;
+}
+
+
+@keyframes lnanim {
+    0% {opacity:1;background:rgba(255,255,255,.5);}
+    20% {opacity:1;background:rgba(0,0,0,.5);}
+    50% {opacity:1;background:rgba(255,255,255,.5);}
+    100% {opacity:0;background:rgba(0,0,0,0);}
+}
+
+svg.lnbox{
+    position:absolute;
+    top:0;
+    left:0;
+    animation: lnanim 0.5s  0s 1 normal both;
+}
+
+
+svg.hangman
+{
+    stroke-width:2;
+    stroke: #444;
+    fill:none;
+    font: italic 13px sans-serif;
+}
+
+svg.hangman > text
+{
+    font: italic 13px sans-serif;
+    stroke-width:0.1;
+    fill:#0f0;
+    stroke: #f04;
+
+}
+
+
+#divhangman
+{
+    width:300px;
+    height:300px;
+}
+
+svg.lnbox0{
+    /*    opacity:.5; */
+
+}
+
+svg.lnbox1{
+    /*    opacity:.5; */
+    filter: blur(13px);
+}
+
+
+
+/**/
+
+.autoclick {};
+
+.unsaved {color:#ff0000;}
+
+
+.ocanvas
+{
+    display:flex;
+}
+
+.ocanvas>div
+{
+    border:1px dotted #000;
+    margin:5px;
+}
+
+.ocanvas>div:nth-child(2)
+{
+    overflow:scroll;
+}
+
+.canstyle
+{
+    cursor: inherit;
+    touch-action: none;
+}
+
+.pww
+{
+    border:1px solid #008;
+    border-radius:3px;
+    text-align:center;
+}
+
+div.fortune
+{
+    background: #eec;
+    padding: 15px;
+    margin: 20px;
+}
+
+.canvases
+{
+    margin:0;
+    padding:0;
+}
+
+.canvases p, .canvases h3
+{
+    margin:0;
+    margin:0;
+}
+
+
+.cansel , .canunsel
+{
+    background:#ccc;
+    margin:10px;
+    padding:4px;
+}
+
+.cansel
+{
+    background:#fcf;
+    border:1px solid #000;
+}
+
+.paintbox
+{
+
+}
+
+
+
+
+.paintbox input.selected{
+    border:3px solid #000;
+}
+
+.paintbox input.unselected{
+    border:3px solid rgba(0,0,0,0);
+}
+
+
+.paintbox td.selected{
+    transform:scale(1.5) rotate(45deg);
+    z-index:200;
+}
+
+.paintbox td.unselected{
+    transform:scale(0.85);
+}
+
+
+
+
+body {
+    background:#fff;
+    animation: hideous 0.05s steps(1,end) 0s 1 normal both;
+}
+
+@keyframes hideous {
+    from {
+        visibility: hidden
+    }
+    to {
+        visibility: visible
+    }
+}
+
+@keyframes loader {
+    0% {transform:rotate(0deg);}
+    100% {transform:rotate(360deg);}
+}
+
+
+@keyframes frflash {
+    0% {transform:rotate(0deg)  scale(8);}
+    90% {transform:rotate(10deg) scale(2);}
+    100% {transform:rotate(10deg) scale(2);}
+}
+
+
+.paidflash
+{
+
+    animation: frflash 1s  0s 1 normal both;
+    transform:  scale(4);
+    text-align:center;
+    height:0;
+    top:0;
+    left:0;
+}
+
+
+
+
+.ltc , .btc {
+    opacity:1;
+
+    font-size: initial;}
+
+.ltc > small, .btc > small
+{font-size: initial;
+    opacity:0.6;
+}
+
+.btc::before {content:'฿'}
+
+.ltc::before {content:'Ł'}
+
+
+
+body {background:#fff;
+    margin:0;
+    padding:0;
+    font-family: sans-serif;
+    font-weight:light;
+    color:#666
+}
+
+body.loading:not(.paid)
+{
+    opacity:0.75;
+}
+
+body.paid {
+    opacity:1;
+}
+
+body.loading:not(.paid):before {content:'';
+
+    z-index:10000;
+    position:fixed;
+    visibility:visible !important;
+    color:#fff;
+    display:inline-block;
+    margin:-50px -50px;
+    width:100px;
+    height:100px;
+    left:50%;
+    top:50%;
+
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='-100 -100 200 200' xmlns='http://www.w3.org/2000/svg'%3E  %3Ccircle cx='0' cy='50' r='10' fill='rgba(0,128,255,1)'/%3E  %3Ccircle cx='24.999999999999996' cy='43.30127018922194' r='10' fill='rgba(0,128,255,0.9166666666666666)'/%3E  %3Ccircle cx='43.30127018922193' cy='25.000000000000007' r='10' fill='rgba(0,128,255,0.8333333333333334)'/%3E  %3Ccircle cx='50' cy='3.061616997868383e-15' r='10' fill='rgba(0,128,255,0.75)'/%3E  %3Ccircle cx='43.30127018922194' cy='-24.99999999999999' r='10' fill='rgba(0,128,255,0.6666666666666667)'/%3E  %3Ccircle cx='24.999999999999996' cy='-43.30127018922194' r='10' fill='rgba(0,128,255,0.5833333333333333)'/%3E  %3Ccircle cx='6.123233995736766e-15' cy='-50' r='10' fill='rgba(0,128,255,0.5)'/%3E  %3Ccircle cx='-24.999999999999986' cy='-43.30127018922194' r='10' fill='rgba(0,128,255,0.41666666666666663)'/%3E  %3Ccircle cx='-43.301270189221924' cy='-25.00000000000002' r='10' fill='rgba(0,128,255,0.33333333333333337)'/%3E  %3Ccircle cx='-50' cy='-9.184850993605149e-15' r='10' fill='rgba(0,128,255,0.25)'/%3E  %3Ccircle cx='-43.30127018922193' cy='25.000000000000007' r='10' fill='rgba(0,128,255,0.16666666666666663)'/%3E  %3Ccircle cx='-25.00000000000002' cy='43.30127018922192' r='10' fill='rgba(0,128,255,0.08333333333333337)'/%3E  %3C/svg%3E");
+
+    animation:loader 2s infinite steps(12, end);}
+
+
+body.paid:before {content:'PAID';
+    font-size:40px;
+    color:#f00;
+    z-index:10000;
+    position:fixed;
+    visibility:visible !important;
+    display:inline-block;
+    margin:-50px -25px;
+    width:100px;
+    height:50px;
+    left:50%;
+    top:50%;
+    opacity:0.5;
+    background:#ff0;
+    border:3px solid #f00;
+    /*background-image: url("data:image/svg+xml,%3Csvg viewBox='-50 -50 100 100' xmlns='http://www.w3.org/2000/svg'%3E %3Ctext x='-50' y='10' style='font: 40px monospace; fill: red' stroke='%23000' %3E PAID! %3C/text%3E  %3C/svg%3E");*/
+    animation: frflash 1s  0s 1 normal both;
+}
+
+
+body {background:#fff;
+    margin:0;
+    padding:0;
+    font-family: sans-serif;
+    font-weight:light;
+    color:#666
+}
+
+
+
+
+
+a {color:#00c;}
+
+textarea,
+input.text,
+input[type="text"],
+input[type="button"],
+input[type="submit"],
+button,
+.input-checkbox {
+    -webkit-appearance: none;
+    border-radius: 0;
+}
+
+button {
+    background: #08c;
+    color: #fff;
+    padding: 3px;
+    margin: 0px;
+    text-decoration: none;
+    border-radius: 3px;
+    border:none;
+    margin:5px;
+    padding:5px;
+    cursor: pointer;
+}
+
+.cpal
+{
+    background:#ccc;
+    border-collapse:collapse;
+}
+
+.cpal *
+{
+    margin:0px;
+    padding:0px;
+}
+
+.cpal td
+{
+    width:20px;
+    height:20px;
+    position:relative;
+    z-index:100;
+}
+
+.dicecontainer {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+
+.dicecontainer input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+
+
+.dicecontainer input:checked ~ svg rect.colb
+{
+    background:#f89;
+    border:10px solid #8f8;
+
+}
+
+.dicecontainer input:not(:checked) ~ svg rect.colb
+{
+    background:#8f9;
+    border:10px solid #8f8;
+
+}
+
+
+.diceselbad
+{
+    color:#c00;
+}
+
+.checkmark0, .checkmark1
+{
+    position:absolute;
+    top:0;
+    left:0;
+
+}
+
+.dicecontainer input:checked ~ .checkmark0 {
+    opacity: 0;
+}
+
+.dicecontainer input:not(:checked) ~ .checkmark1 {
+    opacity: 0;
+}
+
+div.dices {display:flex;width:100%}
+div.dices > div {flex:1;}
+div.dices > div:nth-child(1) {width:160px;}
+
+
+.dicelost , .dicewon
+{
+    font-size:1.5em;
+}
+
+.dicewon {
+    color:#060;
+}
+.dicelost {
+    color:#800;
+}
+
+
+input.roll[type="submit"]
+{
+    padding:10px 40px;
+    font-size:1.5em;
+    background:#080;
+}
+
+
+.payinv
+{
+    display:flex;
+}
+
+.payinv > span:first-child {
+    flex-grow:1;
+    min-width:300px;
+}
+
+.payinv > span:nth-child {
+    flex-shrink:1;
+}
+
+.qrcontainer  svg
+{
+    min-width:100px;
+    max-width:300px;
+    display:inline-block;
+    vertical-align: top;
+    background:#fff;
+    margin:10px;
+    color:#f00;
+}
+
+
+canvas {
+    image-rendering: optimizeSpeed;             // Older versions of FF
+image-rendering: -moz-crisp-edges;          // FF 6.0+
+image-rendering: -webkit-optimize-contrast; // Webkit (non standard naming)
+image-rendering: -o-crisp-edges;            // OS X & Windows Opera (12.02+)
+image-rendering: crisp-edges;               // Possible future browsers.
+-ms-interpolation-mode: nearest-neighbor;   // IE (non standard naming)
+}
