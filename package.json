@@ -1,15 +1,29 @@
 {
   "name": "light-it-up",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Draw SVG lightning bolts on to any element, creating a flash effect.",
-  "browser": "index.js",
+  "main": "index.js",
+  "browser": "index.min.js",
   "author": "Oliver Gugger <gugger@gmail.com>",
   "repository": {
     "type": "git",
     "url": "https://github.com/guggero/light-it-up.git"
   },
+  "scripts": {
+    "dist": "babel --minified --out-file index.min.js index.js"
+  },
   "contributors": [
     "rompert https://github.com/robtex"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0"
+  },
+  "babel": {
+    "presets": [
+      ["@babel/preset-env", {"targets": {"ie": "11"}}]
+    ]
+  }
 }
